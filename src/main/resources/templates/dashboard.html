@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -28,7 +29,12 @@
         <a th:href="@{/}" class="nav-link"><i class="bi bi-house me-2"></i>Home</a>
         <a th:href="@{/dashboard}" class="nav-link active"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a>
         <hr class="border-secondary mx-3 my-2"/>
-        <a th:href="@{/logout}" class="nav-link text-danger"><i class="bi bi-box-arrow-left me-2"></i>Logout</a>
+        <!-- ✅ Fixed: POST form instead of GET link -->
+        <form th:action="@{/logout}" method="post" class="mx-2">
+            <button type="submit" class="nav-link text-danger border-0 bg-transparent w-100 text-start px-3">
+                <i class="bi bi-box-arrow-left me-2"></i>Logout
+            </button>
+        </form>
     </nav>
 </div>
 
@@ -37,8 +43,16 @@
     <div class="topbar">
         <h5 class="fw-bold mb-0"><i class="bi bi-speedometer2 me-2 text-primary"></i>Dashboard</h5>
         <div class="d-flex align-items-center gap-3">
-            <span class="text-muted small"><i class="bi bi-person-circle me-1"></i>Admin</span>
-            <a th:href="@{/logout}" class="btn btn-outline-danger btn-sm"><i class="bi bi-box-arrow-left me-1"></i>Logout</a>
+            <span class="text-muted small">
+                <i class="bi bi-person-circle me-1"></i>
+                <span th:text="${username}">User</span>
+            </span>
+            <!-- ✅ Fixed: POST form instead of GET link -->
+            <form th:action="@{/logout}" method="post" class="d-inline">
+                <button type="submit" class="btn btn-outline-danger btn-sm">
+                    <i class="bi bi-box-arrow-left me-1"></i>Logout
+                </button>
+            </form>
         </div>
     </div>
 
@@ -60,7 +74,10 @@
                 <div class="card stat-card p-3">
                     <div class="d-flex align-items-center gap-3">
                         <div class="stat-icon bg-primary bg-opacity-10 text-primary"><i class="bi bi-people-fill"></i></div>
-                        <div><div class="text-muted small">Total Drivers</div><div class="fw-bold fs-4" th:text="${drivers.size()}">0</div></div>
+                        <div>
+                            <div class="text-muted small">Total Drivers</div>
+                            <div class="fw-bold fs-4" th:text="${totalDrivers}">0</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -68,7 +85,10 @@
                 <div class="card stat-card p-3">
                     <div class="d-flex align-items-center gap-3">
                         <div class="stat-icon bg-success bg-opacity-10 text-success"><i class="bi bi-check-circle-fill"></i></div>
-                        <div><div class="text-muted small">Active</div><div class="fw-bold fs-4" th:text="${drivers.size()}">0</div></div>
+                        <div>
+                            <div class="text-muted small">Active</div>
+                            <div class="fw-bold fs-4" th:text="${activeDrivers}">0</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -76,7 +96,10 @@
                 <div class="card stat-card p-3">
                     <div class="d-flex align-items-center gap-3">
                         <div class="stat-icon bg-warning bg-opacity-10 text-warning"><i class="bi bi-card-checklist"></i></div>
-                        <div><div class="text-muted small">Licensed</div><div class="fw-bold fs-4" th:text="${drivers.size()}">0</div></div>
+                        <div>
+                            <div class="text-muted small">Licensed</div>
+                            <div class="fw-bold fs-4" th:text="${licensedDrivers}">0</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -84,7 +107,10 @@
                 <div class="card stat-card p-3">
                     <div class="d-flex align-items-center gap-3">
                         <div class="stat-icon bg-info bg-opacity-10 text-info"><i class="bi bi-envelope-fill"></i></div>
-                        <div><div class="text-muted small">With Email</div><div class="fw-bold fs-4">—</div></div>
+                        <div>
+                            <div class="text-muted small">With Email</div>
+                            <div class="fw-bold fs-4" th:text="${driversWithEmail}">0</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -94,15 +120,34 @@
             <!-- Add Form -->
             <div class="col-md-4">
                 <div class="card border-0 rounded-3 shadow-sm">
-                    <div class="card-header bg-dark text-white fw-semibold"><i class="bi bi-plus-circle me-1"></i>Add New Driver</div>
+                    <div class="card-header bg-dark text-white fw-semibold">
+                        <i class="bi bi-plus-circle me-1"></i>Add New Driver
+                    </div>
                     <div class="card-body">
                         <form th:action="@{/drivers/add}" th:object="${newDriver}" method="post">
-                            <div class="mb-3"><label class="form-label">First Name</label><input type="text" class="form-control" th:field="*{firstName}" placeholder="e.g. John" required/></div>
-                            <div class="mb-3"><label class="form-label">Last Name</label><input type="text" class="form-control" th:field="*{lastName}" placeholder="e.g. Doe" required/></div>
-                            <div class="mb-3"><label class="form-label">License Number</label><input type="text" class="form-control" th:field="*{licenseNumber}" placeholder="e.g. LIC-001"/></div>
-                            <div class="mb-3"><label class="form-label">Phone</label><input type="text" class="form-control" th:field="*{phone}" placeholder="e.g. +1 555 0100"/></div>
-                            <div class="mb-3"><label class="form-label">Email</label><input type="email" class="form-control" th:field="*{email}" placeholder="e.g. john@example.com"/></div>
-                            <button type="submit" class="btn btn-primary w-100"><i class="bi bi-save me-1"></i>Save Driver</button>
+                            <div class="mb-3">
+                                <label class="form-label">First Name</label>
+                                <input type="text" class="form-control" th:field="*{firstName}" placeholder="e.g. John" required/>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Last Name</label>
+                                <input type="text" class="form-control" th:field="*{lastName}" placeholder="e.g. Doe" required/>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">License Number</label>
+                                <input type="text" class="form-control" th:field="*{licenseNumber}" placeholder="e.g. LIC-001"/>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Phone</label>
+                                <input type="text" class="form-control" th:field="*{phone}" placeholder="e.g. +1 555 0100"/>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" th:field="*{email}" placeholder="e.g. john@example.com"/>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="bi bi-save me-1"></i>Save Driver
+                            </button>
                         </form>
                     </div>
                 </div>
@@ -113,17 +158,27 @@
                 <div class="card border-0 rounded-3 shadow-sm">
                     <div class="card-header bg-dark text-white fw-semibold d-flex justify-content-between align-items-center">
                         <span><i class="bi bi-table me-1"></i>All Drivers</span>
-                        <span class="badge bg-primary" th:text="${drivers.size()} + ' total'">0 total</span>
+                        <span class="badge bg-primary" th:text="${totalDrivers} + ' total'">0 total</span>
                     </div>
                     <div class="card-body p-0">
                         <div class="table-responsive">
                             <table class="table table-hover table-striped mb-0">
                                 <thead class="table-secondary">
-                                <tr><th>#ID</th><th>First Name</th><th>Last Name</th><th>License</th><th>Phone</th><th>Email</th><th>Actions</th></tr>
+                                <tr>
+                                    <th>#ID</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>License</th>
+                                    <th>Phone</th>
+                                    <th>Email</th>
+                                    <th>Actions</th>
+                                </tr>
                                 </thead>
                                 <tbody>
                                 <tr th:if="${drivers.empty}">
-                                    <td colspan="7" class="text-center text-muted py-5"><i class="bi bi-inbox fs-3 d-block mb-2"></i>No drivers yet.</td>
+                                    <td colspan="7" class="text-center text-muted py-5">
+                                        <i class="bi bi-inbox fs-3 d-block mb-2"></i>No drivers yet.
+                                    </td>
                                 </tr>
                                 <tr th:each="driver : ${drivers}">
                                     <td><span class="badge bg-secondary" th:text="${driver.id}"></span></td>
@@ -133,9 +188,16 @@
                                     <td th:text="${driver.phone} ?: '—'"></td>
                                     <td th:text="${driver.email} ?: '—'"></td>
                                     <td>
-                                        <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" th:data-bs-target="${'#editModal-' + driver.id}"><i class="bi bi-pencil"></i></button>
+                                        <button type="button" class="btn btn-sm btn-outline-primary"
+                                                data-bs-toggle="modal"
+                                                th:attr="data-bs-target=${'#editModal-' + driver.id}">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
                                         <form th:action="@{/drivers/delete/{id}(id=${driver.id})}" method="post" class="d-inline">
-                                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this driver?')"><i class="bi bi-trash"></i></button>
+                                            <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                    onclick="return confirm('Delete this driver?')">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
                                         </form>
                                     </td>
                                 </tr>
@@ -155,16 +217,33 @@
         <div class="modal-dialog">
             <div class="modal-content rounded-3 overflow-hidden">
                 <div class="modal-header bg-dark text-white">
-                    <h5 class="modal-title"><i class="bi bi-pencil-square me-1"></i>Edit Driver #<span th:text="${driver.id}"></span></h5>
+                    <h5 class="modal-title">
+                        <i class="bi bi-pencil-square me-1"></i>Edit Driver #<span th:text="${driver.id}"></span>
+                    </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <form th:action="@{/drivers/edit/{id}(id=${driver.id})}" th:object="${driver}" method="post">
                     <div class="modal-body">
-                        <div class="mb-3"><label class="form-label">First Name</label><input type="text" class="form-control" th:field="*{firstName}" required/></div>
-                        <div class="mb-3"><label class="form-label">Last Name</label><input type="text" class="form-control" th:field="*{lastName}" required/></div>
-                        <div class="mb-3"><label class="form-label">License Number</label><input type="text" class="form-control" th:field="*{licenseNumber}"/></div>
-                        <div class="mb-3"><label class="form-label">Phone</label><input type="text" class="form-control" th:field="*{phone}"/></div>
-                        <div class="mb-3"><label class="form-label">Email</label><input type="email" class="form-control" th:field="*{email}"/></div>
+                        <div class="mb-3">
+                            <label class="form-label">First Name</label>
+                            <input type="text" class="form-control" th:field="*{firstName}" required/>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Last Name</label>
+                            <input type="text" class="form-control" th:field="*{lastName}" required/>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">License Number</label>
+                            <input type="text" class="form-control" th:field="*{licenseNumber}"/>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Phone</label>
+                            <input type="text" class="form-control" th:field="*{phone}"/>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" th:field="*{email}"/>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
