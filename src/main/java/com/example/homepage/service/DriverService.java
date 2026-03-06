@@ -15,8 +15,7 @@ public class DriverService {
         this.driverRepository = driverRepository;
     }
 
-    // Used by DriverController (REST)
-    public List<Driver> getAll() {
+    public List<Driver> getAll() {          // ← renamed from findAll()
         return driverRepository.findAll();
     }
 
@@ -24,24 +23,7 @@ public class DriverService {
         return driverRepository.save(driver);
     }
 
-    public void delete(Long id) {
+    public void delete(Long id) {           // ← renamed from deleteById()
         driverRepository.deleteById(id);
-    }
-
-    // Used by WebController (Thymeleaf)
-    public List<Driver> getAllDrivers() {
-        return driverRepository.findAll();
-    }
-
-    public Driver saveDriver(Driver driver) {
-        return driverRepository.save(driver);
-    }
-
-    public void deleteDriver(Long id) {
-        driverRepository.deleteById(id);
-    }
-
-    public Driver getDriverById(Long id) {
-        return driverRepository.findById(id).orElse(null);
     }
 }
