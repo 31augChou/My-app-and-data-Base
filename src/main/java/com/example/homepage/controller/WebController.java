@@ -30,7 +30,7 @@ public class WebController {
     }
 
     @GetMapping("/")
-    public String index() { return "Index"; }
+    public String index() { return "ndex"; }
 
     @GetMapping("/login")
     public String login() { return "login"; }
