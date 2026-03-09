@@ -14,7 +14,7 @@ Modern UI — Clean design with Bootstrap Icons</p>
 <h2>Link to the website</h2>
 <a href="https://my-app-and-data-base-production.up.railway.app/">Website
 <h2>Data Structure figure</h2>
-<p>
+<p> For Drivers<br>
 @Table(name = "drivers")
 public class Driver {
 
@@ -27,6 +27,22 @@ public class Driver {
     private String licenseNumber;
     private String phone;
     private String email;
+</p>
+<p>For Users<br>
+@Table(name = "users")
+public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(unique = true, nullable = false)
+    private String username;
+
+    @Column(nullable = false)
+    private String password;
+
+    private String role = "USER";
 
 </p>
 <h2>How to deploy on railway</h2>
