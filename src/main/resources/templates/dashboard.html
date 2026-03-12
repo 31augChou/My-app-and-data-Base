@@ -132,6 +132,11 @@
             color: #e2e8f0; box-shadow: 0 0 0 3px rgba(0,212,255,.1);
         }
         .form-control::placeholder { color: #2d3f52; }
+        /* Native HTML5 invalid state */
+        .form-control:invalid:not(:placeholder-shown) {
+            border-color: #f87171;
+            box-shadow: 0 0 0 3px rgba(248,113,113,.12);
+        }
 
         /* ── Table ── */
         .table { color: #e2e8f0; margin: 0; }
@@ -298,7 +303,7 @@
                         <span><i class="bi bi-plus-circle"></i>Add New Driver</span>
                     </div>
                     <div class="p-4">
-                        <form th:action="@{/drivers/add}" th:object="${newDriver}" method="post">
+                        <form th:action="@{/drivers/add}" th:object="${newDriver}" method="post" id="addDriverForm">
                             <div class="mb-3">
                                 <label class="form-label">First Name</label>
                                 <input type="text" class="form-control" th:field="*{firstName}" placeholder="e.g. John" required/>
@@ -313,11 +318,19 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Phone</label>
-                                <input type="text" class="form-control" th:field="*{phone}" placeholder="e.g. +1 555 0100"/>
+                                <input type="text" class="form-control"
+                                       th:field="*{phone}"
+                                       placeholder="e.g. +1 555 0100"
+                                       inputmode="tel"
+                                       autocomplete="tel"
+                                       pattern="[0-9\s\+\-\(\)]*"
+                                       title="Phone number must contain only digits, spaces, +, -, ( ) — no letters allowed."/>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Email</label>
-                                <input type="email" class="form-control" th:field="*{email}" placeholder="e.g. john@example.com"/>
+                                <input type="email" class="form-control" th:field="*{email}"
+                                       placeholder="e.g. john@example.com"
+                                       title="Please enter a valid email address (e.g. john@example.com) — not a phone number."/>
                             </div>
                             <button type="submit" class="btn btn-primary w-100">
                                 <i class="bi bi-save me-1"></i>Save Driver
@@ -389,7 +402,7 @@
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
-                <form th:action="@{/drivers/edit/{id}(id=${driver.id})}" th:object="${driver}" method="post">
+                <form th:action="@{/drivers/edit/{id}(id=${driver.id})}" th:object="${driver}" method="post" class="edit-driver-form">
                     <div class="modal-body">
                         <div class="mb-3">
                             <label class="form-label">First Name</label>
@@ -405,11 +418,17 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Phone</label>
-                            <input type="text" class="form-control" th:field="*{phone}"/>
+                            <input type="text" class="form-control"
+                                   th:field="*{phone}"
+                                   inputmode="tel"
+                                   autocomplete="tel"
+                                   pattern="[0-9\s\+\-\(\)]*"
+                                   title="Phone number must contain only digits, spaces, +, -, ( ) — no letters allowed."/>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Email</label>
-                            <input type="email" class="form-control" th:field="*{email}"/>
+                            <input type="email" class="form-control" th:field="*{email}"
+                                   title="Please enter a valid email address (e.g. john@example.com) — not a phone number."/>
                         </div>
                     </div>
                     <div class="modal-footer">
