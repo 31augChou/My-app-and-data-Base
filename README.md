@@ -51,7 +51,7 @@ After that change your application properties example localhost to ${PGHOST} and
 If there any erros maybe because of the difference environment or version, sometimes we need to build a file so that your application can be match with the railway environment.
 Last, generate domain and you will have your domain and you can check it or test it.
 </p>
-<h1>AI DECLARATION</h1>
+<h2>AI DECLARATION</h2>
 <p>For the AI Agent I used is Claude Ai <br>
 Why? because I think this Ai is good for developer<br>
 For the prompt I didn't ask it much only building front-end and design some style sheet for me, since I don't know much about css<br>
